@@ -10,6 +10,15 @@ const array2 = [3, 2, 0];
 
 console.log(findIntersection(array1, array2));
 
+// Z-TASK
+
+// function sumEvens(arr: number[]): number {
+//   return arr.filter((num) => num % 2 === 0).reduce((sum, num) => sum + num, 0);
+// }
+
+// console.log(sumEvens([1, 2, 3]));
+// console.log(sumEvens([2, 4, 6, 7]));
+
 // X-TASK
 
 // function countOccurrences(obj:
