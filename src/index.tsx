@@ -13,17 +13,8 @@ import "./css/index.css";
 const container = document.getElementById("root")!;
 const root = createRoot(container)
 
-/**
- * ============================================================================
- * 4-QADAM: REDUX STORE NI REACT ILOVAGA ULASH (<Provider />)
- * ============================================================================
- * Redux Store ni butun React daraxtiga taqdim qilish uchun <Provider store={store}>
- * ishlatiladi. Natijada ilovaning istalgan qismidagi komponent Redux State va
- * Dispatch-dan foydalana oladi.
- */
 root.render(
   <React.StrictMode>
-    {/* 4.1. Provider orqali markaziy store barcha bolalar komponentlariga uzatiladi */}
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />

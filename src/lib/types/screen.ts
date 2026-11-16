@@ -1,20 +1,12 @@
 import { Member } from "./member";
 import { Product } from "./product";
 
-/** 
- * ============================================================================
- * 1-QADAM: REDUX STATE TIP VA STRUKTURASINI BELGILASH (TypeScript)
- * ============================================================================
- * Redux bilan ishlashda eng birinchi qadam — Store ichida qanday ma'lumotlar
- * saqlanishini (State arxitekturasini) oldindan tiplashtirish (Interface yaratish).
- */
-
-/** REACT APP STATE: Butun ilovaning umumiy (global) State interfeysi */
+/** REACT APP STATE **/
 export interface AppRootState {
-  homePage: HomePageState; // Kelajakda boshqa sahifalar ham shu yerga qo'shiladi (products, orders va h.k.)
+  homePage: HomePageState;
 }
 
-/** HOME PAGE STATE: HomePage sahifasiga tegishli ma'lumotlar strukturasi */
+/** HOME PAGE **/
 export interface HomePageState {
   popularDishes: Product[];
   newDishes: Product[];
