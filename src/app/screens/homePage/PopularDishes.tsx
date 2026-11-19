@@ -73,13 +73,26 @@ export default function PopularDishes() {
                         gap: 1.5,
                         py: 1.5,
                         px: "var(--Card-padding)",
-                        borderTop: "1px solid",
+                        borderTop: "1px solid rgba(255, 255, 255, 0.2)",
                         height: "60px",
                       }}
                     >
                       <Typography
-                        startDecorator={<DescriptionOutlinedIcon />}
+                        startDecorator={
+                          <DescriptionOutlinedIcon
+                            sx={{ alignSelf: "flex-start", mt: "2px" }}
+                          />
+                        }
                         textColor="neutral.300"
+                        sx={{
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          fontSize: "13px",
+                          lineHeight: "18px",
+                        }}
                       >
                         {product.productDesc}
                       </Typography>

@@ -21,12 +21,26 @@ import ProductService from "../../services/ProductService";
 import MemberService from "../../services/MemberService";
 import { Member } from "../../../lib/types/member";
 import { serverApi } from "../../../lib/config";
+import { CartItem } from "../../../lib/types/search";
 
-/** REDUX SLICE & SELECTOR */
+/**
+ * ============================================================================
+ * 6-QADAM: TANLANGAN MAHSULOT DETALI (ChosenProduct.tsx)
+ * ============================================================================
+ * Roli: Bitta tanlangan mahsulotning to'liq tafsilotlari va rasmlarini ko'rsatish:
+ *  1. useParams: URL dan 'productId' ni ajratib oladi (masalan, /products/:productId).
+ *  2. actionDispatch: Serverdan olingan mahsulot va restoran ma'lumotlarini Store-ga yozadi.
+ *  3. chosenProductRetriever & restaurantRetriever: Store-dagi datalarni komponentga ulaydi.
+ *  4. useEffect: Sahifa ochilganda parallel 2 ta so'rov: mahsulot va restoran ma'lumotlarini oladi.
+ */
+
+/** 6.1. DISPATCHER: chosenProduct va restaurant ni Redux Store-ga yuborish */
 const actionDispatch = (dispatch: Dispatch) => ({
   setRestaurant: (data: Member) => dispatch(setRestaurant(data)),
   setChosenProduct: (data: Product) => dispatch(setChosenProduct(data)),
 });
+
+/** 6.2. SELECTORLAR: chosenProduct va restaurant ma'lumotlarini o'qib olish */
 const chosenProductRetriever = createSelector(
   retrieveChosenProduct,
   (chosenProduct) => ({
@@ -40,27 +54,35 @@ const restaurantRetriever = createSelector(
   }),
 );
 
-export default function ChosenProduct() {
+interface ChosenProductsProps {
+  onAdd: (item: CartItem) => void;
+}
+
+export default function ChosenProduct(props: ChosenProductsProps) {
+  // 6.3. URL parametridan productId ni olish
+  const { onAdd } = props;
   const { productId } = useParams<{ productId: string }>();
   const { setRestaurant, setChosenProduct } = actionDispatch(useDispatch());
   const { chosenProduct } = useSelector(chosenProductRetriever);
   const { restaurant } = useSelector(restaurantRetriever);
   console.log("productId:", productId);
 
+  // 6.4. Mahsulot va Restoran ma'lumotlarini backenddan olish va Redux-ga dispatch qilish
   useEffect(() => {
     const product = new ProductService();
     product
       .getProduct(productId)
-      .then((data) => setChosenProduct(data))
+      .then((data) => setChosenProduct(data)) // Redux Store-ga yozildi
       .catch((err) => console.log(err));
 
     const member = new MemberService();
     member
       .getRestaurant()
-      .then((data) => setRestaurant(data))
+      .then((data) => setRestaurant(data)) // Redux Store-ga yozildi
       .catch((err) => console.log(err));
   }, []);
 
+  // 6.5. Ma'lumot yuklanguncha bo'sh sahifa qaytarish (Guard clause)
   if (!chosenProduct) return null;
 
   return (
@@ -112,7 +134,20 @@ export default function ChosenProduct() {
               <span>${chosenProduct?.productPrice}</span>
             </div>
             <div className={"button-box"}>
-              <Button variant="contained">Add To Basket</Button>
+              <Button
+                variant="contained"
+                onClick={() =>
+                  onAdd({
+                    _id: chosenProduct._id,
+                    quantity: 1,
+                    name: chosenProduct.productName,
+                    price: chosenProduct.productPrice,
+                    image: chosenProduct.productImages[0],
+                  })
+                }
+              >
+                Add To Basket
+              </Button>
             </div>
           </Box>
         </Stack>

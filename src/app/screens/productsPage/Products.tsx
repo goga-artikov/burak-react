@@ -19,18 +19,39 @@ import ProductService from "../../services/ProductService";
 import { ProductCollection } from "../../../lib/enums/product.enum";
 import { serverApi } from "../../../lib/config";
 import { useHistory } from "react-router-dom";
+import { CartItem } from "../../../lib/types/search";
 
-/** REDUX SLICE & SELECTOR */
+/**
+ * ============================================================================
+ * 5-QADAM: UI KOMPONENTDA REDUX VA FILTERLAR MANTIG'I (Products.tsx)
+ * ============================================================================
+ * Roli: Barcha mahsulotlarni ko'rsatish, dinamik filtratsiya, qidiruv va sahifalash:
+ *  1. actionDispatch: API dan kelgan mahsulotlarni Redux Store-ga yozish (setProducts).
+ *  2. productsRetriever: Redux Store-dan mahsulotlar ro'yxatini qabul qilish (useSelector).
+ *  3. productSearch: Filtrlash holati (order, page, limit, collection, search).
+ *  4. useEffect: Har safar filtr o'zgarganda API chaqirib, Store-ni yangilash.
+ */
+
+/** 5.1. DISPATCHER: Mahsulotlar ro'yxatini Redux Store-ga yuborish */
 const actionDispatch = (dispatch: Dispatch) => ({
   setProducts: (data: Product[]) => dispatch(setProducts(data)),
 });
+
+/** 5.2. SELECTOR: Redux Store-dagi 'products' ro'yxatini o'qib olish */
 const productsRetriever = createSelector(retrieveProducts, (products) => ({
   products,
 }));
 
-export default function Products() {
+interface ProductsProps {
+  onAdd: (item: CartItem) => void;
+}
+
+export default function Products(props: ProductsProps) {
+  const { onAdd } = props;
   const { setProducts } = actionDispatch(useDispatch());
   const { products } = useSelector(productsRetriever);
+
+  // 5.3. Filtrlash so'rovi (Inquiry) state-i
   const [productSearch, setProductSearch] = useState<ProductInquiry>({
     page: 1,
     limit: 8,
@@ -41,11 +62,12 @@ export default function Products() {
   const [searchText, setSearchText] = useState<string>("");
   const history = useHistory();
 
+  // 5.4. productSearch o'zgarganda backenddan ma'lumot olish va Redux-ga yuklash
   useEffect(() => {
     const product = new ProductService();
     product
       .getProducts(productSearch)
-      .then((data) => setProducts(data))
+      .then((data) => setProducts(data)) // Redux Store-ga saqlandi
       .catch((err) => console.log(err));
   }, [productSearch]);
 
@@ -56,7 +78,7 @@ export default function Products() {
     }
   }, [searchText]);
 
-  /** HANDLERS**/
+  /** HANDLERS: Filtrlarni o'zgartiruvchi hodisalar **/
 
   const searchCollectionHandler = (collection: ProductCollection) => {
     delete productSearch.search;
@@ -260,7 +282,20 @@ export default function Products() {
                         <div className={"product-sale"}>{sizeVolume}</div>
 
                         {/* Savatcha tugmasi */}
-                        <Button className={"shop-btn"}>
+                        <Button
+                          className={"shop-btn"}
+                          onClick={(e) => {
+                            console.log("button pressed");
+                            onAdd({
+                              _id: product._id,
+                              quantity: 1,
+                              name: product.productName,
+                              price: product.productPrice,
+                              image: product.productImages[0],
+                            });
+                            e.stopPropagation();
+                          }}
+                        >
                           <img
                             src={"/icons/shopping-cart.svg"}
                             alt="shopping cart"

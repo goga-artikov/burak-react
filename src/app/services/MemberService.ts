@@ -22,6 +22,9 @@ class MemberService {
     }
   }
 
+  /**
+   * Roli: Restoran (oshxona egasi/admin) ma'lumotlarini serverdan olish.
+   */
   public async getRestaurant(): Promise<Member> {
     try {
       const url = this.path + "/member/restaurant";

@@ -26,6 +26,10 @@ class ProductService {
     }
   }
 
+  /**
+   * Roli: Bitta mahsulot tafsilotlarini uning 'productId' si orqali serverdan olish.
+   * withCredentials: true — ko'rishlar soni (views) va auth cookies hisoblanishi uchun kerak.
+   */
   public async getProduct(productId: string): Promise<Product> {
     try {
       const url = `${this.path}/product/${productId}`;
