@@ -8,7 +8,7 @@ import styled from "styled-components";
 import LoginIcon from "@mui/icons-material/Login";
 import { T } from "../../../lib/types/common";
 import MemberService from "../../services/MemberService";
-import { MemberInput } from "../../../lib/types/member";
+import { LoginInput, Member, MemberInput } from "../../../lib/types/member";
 import { Messages } from "../../../lib/config";
 import { sweetErrorHandling } from "../../../lib/sweetAlert";
 
@@ -40,10 +40,17 @@ interface AuthenticationModalProps {
   loginOpen: boolean;
   handleSignupClose: () => void;
   handleLoginClose: () => void;
+  onAuthSuccess: (member: Member) => void;
 }
 
 export default function AuthenticationModal(props: AuthenticationModalProps) {
-  const { signupOpen, loginOpen, handleSignupClose, handleLoginClose } = props;
+  const {
+    signupOpen,
+    loginOpen,
+    handleSignupClose,
+    handleLoginClose,
+    onAuthSuccess,
+  } = props;
   const classes = useStyles();
   const [memberNick, setMemberNick] = useState<string>("");
   const [memberPhone, setMemberPhone] = useState<string>("");
@@ -64,8 +71,9 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
   };
 
   const handlePasswordKeyDown = (e: T) => {
-    if (e.key === "Enter" && signupOpen) {
-      handleSignupRequest().then();
+    if (e.key === "Enter") {
+      if (signupOpen) handleSignupRequest().then();
+      if (loginOpen) handleLoginRequest().then();
     }
   };
 
@@ -88,11 +96,29 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       const member = new MemberService();
       const result = await member.signup(signupInput);
 
-      // muvaffaqiyatli bo'lsa modalni yopamiz
+      onAuthSuccess(result);
       handleSignupClose();
     } catch (err) {
       console.log(err);
       handleSignupClose();
+      sweetErrorHandling(err).then();
+    }
+  };
+
+  const handleLoginRequest = async () => {
+    try {
+      const isFulfill = memberNick !== "" && memberPassword !== "";
+      if (!isFulfill) throw new Error(Messages.error3);
+
+      const loginInput: LoginInput = { memberNick, memberPassword };
+      const member = new MemberService();
+      const result = await member.login(loginInput);
+
+      onAuthSuccess(result);
+      handleLoginClose();
+    } catch (err) {
+      console.log(err);
+      handleLoginClose();
       sweetErrorHandling(err).then();
     }
   };
@@ -187,17 +213,23 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
                 label="username"
                 variant="outlined"
                 sx={{ my: "10px" }}
+                value={memberNick}
+                onChange={handleUsername}
               />
               <TextField
                 id={"outlined-basic"}
                 label={"password"}
                 variant={"outlined"}
                 type={"password"}
+                value={memberPassword}
+                onChange={handlePassword}
+                onKeyDown={handlePasswordKeyDown}
               />
               <Fab
                 sx={{ marginTop: "27px", width: "120px" }}
                 variant={"extended"}
                 color={"primary"}
+                onClick={handleLoginRequest}
               >
                 <LoginIcon sx={{ mr: 1 }} />
                 Login

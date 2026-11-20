@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import Basket from "./Basket";
 import React, { useEffect, useState } from "react";
 import { CartItem } from "../../../lib/types/search";
+import { Member } from "../../../lib/types/member";
 
 interface HomeNavbarProps {
   cartItems: CartItem[];
@@ -12,6 +13,7 @@ interface HomeNavbarProps {
   onDeleteAll: () => void;
   setSignupOpen: (isOpen: boolean) => void;
   setLoginOpen: (isOpen: boolean) => void;
+  authMember: Member | null;
 }
 
 export default function HomeNavbar(props: HomeNavbarProps) {
@@ -23,8 +25,8 @@ export default function HomeNavbar(props: HomeNavbarProps) {
     onDeleteAll,
     setSignupOpen,
     setLoginOpen,
+    authMember,
   } = props;
-  const authMember = null;
 
   /** HANDLERS **/
 

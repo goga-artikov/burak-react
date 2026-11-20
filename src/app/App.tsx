@@ -10,6 +10,7 @@ import OtherNavbar from "./components/headers/OtherNavbar";
 import Footer from "./components/footer";
 import useBasket from "./components/hooks/useBasket";
 import AuthenticationModal from "./components/auth";
+import { Member } from "../lib/types/member";
 import "../css/app.css";
 import "../css/navbar.css";
 import "../css/footer.css";
@@ -19,6 +20,14 @@ function App() {
   const { cartItems, onAdd, onRemove, onDelete, onDeleteAll } = useBasket();
   const [signupOpen, setSignupOpen] = useState<boolean>(false);
   const [loginOpen, setLoginOpen] = useState<boolean>(false);
+  const [authMember, setAuthMember] = useState<Member | null>(() => {
+    try {
+      const memberData = localStorage.getItem("memberData");
+      return memberData ? (JSON.parse(memberData) as Member) : null;
+    } catch {
+      return null;
+    }
+  });
 
   /** HANDLERS **/
 
@@ -36,6 +45,7 @@ function App() {
           onDeleteAll={onDeleteAll}
           setSignupOpen={setSignupOpen}
           setLoginOpen={setLoginOpen}
+          authMember={authMember}
         />
       ) : (
         <OtherNavbar
@@ -46,6 +56,7 @@ function App() {
           onDeleteAll={onDeleteAll}
           setSignupOpen={setSignupOpen}
           setLoginOpen={setLoginOpen}
+          authMember={authMember}
         />
       )}
 
@@ -73,6 +84,7 @@ function App() {
         loginOpen={loginOpen}
         handleLoginClose={handleLoginClose}
         handleSignupClose={handleSignupClose}
+        onAuthSuccess={setAuthMember}
       />
     </>
   );
