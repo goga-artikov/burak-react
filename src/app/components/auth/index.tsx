@@ -8,9 +8,10 @@ import styled from "styled-components";
 import LoginIcon from "@mui/icons-material/Login";
 import { T } from "../../../lib/types/common";
 import MemberService from "../../services/MemberService";
-import { LoginInput, Member, MemberInput } from "../../../lib/types/member";
+import { LoginInput, MemberInput } from "../../../lib/types/member";
 import { Messages } from "../../../lib/config";
 import { sweetErrorHandling } from "../../../lib/sweetAlert";
+import { useGlobals } from "../hooks/useGlobals";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -40,18 +41,12 @@ interface AuthenticationModalProps {
   loginOpen: boolean;
   handleSignupClose: () => void;
   handleLoginClose: () => void;
-  onAuthSuccess: (member: Member) => void;
 }
 
 export default function AuthenticationModal(props: AuthenticationModalProps) {
-  const {
-    signupOpen,
-    loginOpen,
-    handleSignupClose,
-    handleLoginClose,
-    onAuthSuccess,
-  } = props;
+  const { signupOpen, loginOpen, handleSignupClose, handleLoginClose } = props;
   const classes = useStyles();
+  const { setAuthMember } = useGlobals();
   const [memberNick, setMemberNick] = useState<string>("");
   const [memberPhone, setMemberPhone] = useState<string>("");
   const [memberPassword, setMemberPassword] = useState<string>("");
@@ -96,7 +91,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       const member = new MemberService();
       const result = await member.signup(signupInput);
 
-      onAuthSuccess(result);
+      setAuthMember(result);
       handleSignupClose();
     } catch (err) {
       console.log(err);
@@ -114,7 +109,7 @@ export default function AuthenticationModal(props: AuthenticationModalProps) {
       const member = new MemberService();
       const result = await member.login(loginInput);
 
-      onAuthSuccess(result);
+      setAuthMember(result);
       handleLoginClose();
     } catch (err) {
       console.log(err);
