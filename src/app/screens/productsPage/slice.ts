@@ -1,16 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ProductsPageState } from "../../../lib/types/screen";
 
-/**
- * ============================================================================
- * 2-QADAM: REDUX SLICE (ProductsPage Slice)
- * ============================================================================
- * Roli: ProductsPage sahifasi uchun Redux Toolkit bo'lagini yaratish:
- *  - Boshlang'ich holatni (initialState) belgilaydi
- *  - State-ni o'zgartiruvchi funksiyalarni (reducers) jamlaydi
- *  - Komponentlar chaqirishi uchun Action-larni avtomatik yaratib beradi
- */
-
 // 2.1. Boshlang'ich holat (initialState)
 const initialState: ProductsPageState = {
   restaurant: null,
