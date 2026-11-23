@@ -1,9 +1,11 @@
-import { createContext, useContext } from "react";
+import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { Member } from "../../../lib/types/member";
 
-interface GlobalInterface {
+export interface GlobalInterface {
   authMember: Member | null;
-  setAuthMember: (member: Member | null) => void;
+  setAuthMember: Dispatch<SetStateAction<Member | null>>;
+  orderBuilder: Date;
+  setOrderBuilder: (input: Date) => void;
 }
 
 export const GlobalContext = createContext<GlobalInterface | undefined>(
@@ -12,6 +14,8 @@ export const GlobalContext = createContext<GlobalInterface | undefined>(
 
 export const useGlobals = () => {
   const context = useContext(GlobalContext);
-  if (context === undefined) throw new Error("useGlobals withit Provider");
+  if (context === undefined) {
+    throw new Error("useGlobals must be used within ContextProvider");
+  }
   return context;
 };

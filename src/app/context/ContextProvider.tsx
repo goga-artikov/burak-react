@@ -4,24 +4,21 @@ import { Member } from "../../lib/types/member";
 import { GlobalContext } from "../components/hooks/useGlobals";
 
 const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [authMember, setAuthMember] = useState<Member | null>(() => {
-    const cookies = new Cookies();
-    if (!cookies.get("accessToken")) {
-      localStorage.removeItem("memberData");
-      return null;
-    }
+  const cookies = new Cookies();
+  if (!cookies.get("accessToken")) localStorage.removeItem("memberData");
 
-    try {
-      const memberData = localStorage.getItem("memberData");
-      return memberData ? (JSON.parse(memberData) as Member) : null;
-    } catch {
-      localStorage.removeItem("memberData");
-      return null;
-    }
-  });
+  const [authMember, setAuthMember] = useState<Member | null>(
+    localStorage.getItem("memberData")
+      ? JSON.parse(localStorage.getItem("memberData") as string)
+      : null,
+  );
+  const [orderBuilder, setOrderBuilder] = useState<Date>(new Date());
+  console.log("=== verify ===");
 
   return (
-    <GlobalContext.Provider value={{ authMember, setAuthMember }}>
+    <GlobalContext.Provider
+      value={{ authMember, setAuthMember, orderBuilder, setOrderBuilder }}
+    >
       {children}
     </GlobalContext.Provider>
   );
