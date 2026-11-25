@@ -53,6 +53,7 @@ export default function Basket(props: BasketProps) {
 
       onDeleteAll();
 
+      // 3-qadam: buyurtma yaratilgach ro'yxatni yangilab, orders sahifasini ochadi.
       setOrderBuilder(new Date());
       history.push("/orders");
     } catch (err) {

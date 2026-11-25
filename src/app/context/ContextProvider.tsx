@@ -12,6 +12,7 @@ const ContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       ? JSON.parse(localStorage.getItem("memberData") as string)
       : null,
   );
+  // 1-qadam: umumiy buyurtma yangilanish signalini context orqali saqlaymiz.
   const [orderBuilder, setOrderBuilder] = useState<Date>(new Date());
   console.log("=== verify ===");
 

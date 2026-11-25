@@ -8,6 +8,7 @@ export interface GlobalInterface {
   setOrderBuilder: (input: Date) => void;
 }
 
+// 2-qadam: auth va buyurtma yangilanish signalini komponentlarga uzatadi.
 export const GlobalContext = createContext<GlobalInterface | undefined>(
   undefined,
 );

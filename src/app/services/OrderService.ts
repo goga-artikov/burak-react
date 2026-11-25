@@ -56,6 +56,7 @@ class OrderService {
 
   public async updateOrder(input: OrderUpdateInput): Promise<Order> {
     try {
+      // 4-qadam: buyurtma statusini backendga yuboradi.
       const url = `${this.path}/order/update`;
       const result = await axios.post(url, input, { withCredentials: true });
       console.log("updateOrder:", result);

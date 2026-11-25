@@ -27,6 +27,7 @@ export default function PausedOrders(props: PausedOrderProps) {
   const { authMember, setOrderBuilder } = useGlobals();
   const pausedOrders = useSelector(pausedOrdersRetriever);
 
+  // 6-qadam: bekor qilish yoki to'lovni tasdiqlash statusni yangilab, ro'yxatni qayta yuklaydi.
   const deleteOrderHandler = async (e: T) => {
     try {
       if (!authMember) throw new Error(Messages.error2);

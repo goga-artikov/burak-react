@@ -26,6 +26,7 @@ export default function ProcessOrders(props: ProcessOrderProps) {
   const { authMember, setOrderBuilder } = useGlobals();
   const processOrders = useSelector(processOrdersRetriever);
 
+  // 7-qadam: buyurtmani FINISH holatiga o'tkazib, ro'yxatlarni yangilaydi.
   /** HANDLERS */
 
   const finishOrderHandler = async (e: T) => {
